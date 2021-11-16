@@ -12,15 +12,22 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import java.util.Objects;
+
 public class TicTacToe extends Application {
 
-    private final Image imageback = new Image("file:src/main/resources/tavern.jpg");
+    //TODO - check if file will be properly loaded
+    ClassLoader classLoader = getClass().getClassLoader();
+    Image imageback = new Image(Objects.requireNonNull(classLoader.getResourceAsStream("tavern.jpg")));
+//    private final Image imageback = new Image("file:src/main/resources/tavern.jpg");
+
     private int won, lost, tied, roundCounter, turn;
     private boolean roundOver = false;
 
     //Game Board
     private Button button0, button1, button2, button3, button4, button5, button6, button7, button8;
 
+    private Label header;
     private Label status;
     private Label wins;
     private Label loss;
@@ -34,9 +41,13 @@ public class TicTacToe extends Application {
     @Override
     public void start(Stage stage) {
 
+        won = 0;
+        lost = 0;
+        tied = 0;
+        roundCounter = 1;
+
         //Labels
-        //Labels
-        Label header = new Label("Tavern Tic Tac Toe");
+        header = new Label("Tavern Tic Tac Toe");
         header.setFont(new Font(50));
         header.setTextFill(Color.web("#FFF"));
         status = new Label ("Round 1");
@@ -57,6 +68,7 @@ public class TicTacToe extends Application {
 
         //Utility buttons
         Button nextRound = new Button("Next Round");
+        nextRound.setOnAction(this::clearBoard);
         Button nextGame = new Button ("Next Game");
         Button endGame = new Button ("End Game");
 
@@ -157,13 +169,34 @@ public class TicTacToe extends Application {
         stage.show();
     }
 
+    private void clearBoard(ActionEvent actionEvent) {
+
+        // TODO - next round button works partially, clears board but prevents from taking another move
+        roundCounter++;
+        button0.setText(null);
+        button1.setText(null);
+        button2.setText(null);
+        button3.setText(null);
+        button4.setText(null);
+        button5.setText(null);
+        button6.setText(null);
+        button7.setText(null);
+        button8.setText(null);
+
+        status.setText("Round: " + roundCounter + " - X turn!");
+        round.setText("Round: " + roundCounter);
+        return;
+    }
+
 
     private void placeXor0(ActionEvent actionEvent) {
         if(!roundOver) {
             Button click = (Button) actionEvent.getSource();
 
             if (click.getText().length() > 0) {
-                // AI Move - not working because of random buttonproblems
+
+                // TODO - implement random button line 251
+                // AI Move - not working because of random button problems
 //                if(turn %2 !=0) {
 //                    computerTurn();
 //                }
@@ -185,6 +218,16 @@ public class TicTacToe extends Application {
             if (turn >= 5) {
                 if (checkWinner(value)) {
                     status.setText(String.format("%S has won!", value));
+
+                    //TODO - win / loss counter to be implemented
+/*                    if (value = "X") {
+                        won++;
+                        wins.setText("Wins: " + won);
+                    }
+                    else {
+                        lost++;
+                        loss.setText("Loss: " + lost);
+                    }*/
                     roundOver = true;
                     return;
                 }
@@ -193,11 +236,14 @@ public class TicTacToe extends Application {
             if(turn == 9) {
                 roundOver = true;
                 status.setText("You tied!");
+                tied++;
+                tie.setText("Ties: " + tied );
                 return;
             }
 
             status.setText(String.format("%S's turn.", turn % 2 == 0 ? "X" : "0"));
 
+            // TODO - sort random button (line 251)
             // VS AI - not working because of random button problems
 //            if (turn %2 != 0) {
 //                computerTurn();
@@ -207,8 +253,7 @@ public class TicTacToe extends Application {
     }
 
 //    private void computerTurn() {
-//        // TODO - smart AI algorithm, if there is time.
-//        // Random AI
+//        //TODO - Random AI
 //        button[(int)(Math.random()*9)].fire();
 //    }
 
@@ -258,12 +303,5 @@ public class TicTacToe extends Application {
         }
 
         return false;
-    }
-
-    private void setScore() {
-        won = 0;
-        lost = 0;
-        tied = 0;
-        roundCounter = 1;
     }
 }
