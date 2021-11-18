@@ -16,16 +16,12 @@ import java.util.Objects;
 
 public class TicTacToe extends Application {
 
-    //TODO - check if file will be properly loaded
     ClassLoader classLoader = getClass().getClassLoader();
     Image imageback = new Image(Objects.requireNonNull(classLoader.getResourceAsStream("tavern.jpg")));
-//    private final Image imageback = new Image("file:src/main/resources/tavern.jpg");
+
 
     private int won, lost, tied, roundCounter, turn;
     private boolean roundOver = false;
-
-    //Game Board
-    private Button button0, button1, button2, button3, button4, button5, button6, button7, button8;
 
     private Label header;
     private Label status;
@@ -33,6 +29,7 @@ public class TicTacToe extends Application {
     private Label loss;
     private Label tie;
     private Label round;
+    private Button[][] boardButtons;
 
     public static void main (String[] args) {
         launch();
@@ -70,63 +67,9 @@ public class TicTacToe extends Application {
         Button nextRound = new Button("Next Round");
         nextRound.setOnAction(this::clearBoard);
         Button nextGame = new Button ("Next Game");
+        nextGame.setOnAction(this::clearAll);
         Button endGame = new Button ("End Game");
-
-        //Game Board buttons
-
-        button0 = new Button ("");
-        button0.setOpacity(0.5);
-        button0.setPrefSize(150 , 150);
-        button0.setFont(new Font(60));
-        button0.setOnAction(this::placeXor0);
-
-        button1 = new Button ("");
-        button1.setOpacity(0.5);
-        button1.setPrefSize(150 , 150);
-        button1.setFont(new Font(60));
-        button1.setOnAction(this::placeXor0);
-
-        button2 = new Button ("");
-        button2.setOpacity(0.5);
-        button2.setPrefSize(150 , 150);
-        button2.setFont(new Font(60));
-        button2.setOnAction(this::placeXor0);
-
-        button3 = new Button ("");
-        button3.setOpacity(0.5);
-        button3.setPrefSize(150 , 150);
-        button3.setFont(new Font(60));
-        button3.setOnAction(this::placeXor0);
-
-        button4 = new Button ("");
-        button4.setOpacity(0.5);
-        button4.setPrefSize(150 , 150);
-        button4.setFont(new Font(60));
-        button4.setOnAction(this::placeXor0);
-
-        button5 = new Button ("");
-        button5.setOpacity(0.5);
-        button5.setPrefSize(150 , 150);
-        button5.setFont(new Font(60));
-        button5.setOnAction(this::placeXor0);
-
-        button6 = new Button ("");
-        button6.setOpacity(0.5);
-        button6.setPrefSize(150 , 150);
-        button6.setFont(new Font(60));
-        button6.setOnAction(this::placeXor0);
-
-        button7 = new Button ("");
-        button7.setOpacity(0.5);
-        button7.setPrefSize(150 , 150);
-        button7.setFont(new Font(60));
-        button7.setOnAction(this::placeXor0);
-
-        button8 = new Button ("");
-        button8.setOpacity(0.5);
-        button8.setPrefSize(150 , 150);
-        button8.setFont(new Font(60));
-        button8.setOnAction(this::placeXor0);
+        endGame.setOnAction(e -> System.exit(0));
 
         //Background
         BackgroundSize backgroundSize = new BackgroundSize(100, 100, true, true, true, false);
@@ -145,15 +88,20 @@ public class TicTacToe extends Application {
         grid.add(endGame, 0, 9 );
         grid.add(status, 11, 3);
         grid.setBackground(background);
-        grid.add(button0, 15, 3);
-        grid.add(button1, 16, 3);
-        grid.add(button2, 17, 3);
-        grid.add(button3, 15, 4);
-        grid.add(button4, 16, 4);
-        grid.add(button5, 17, 4);
-        grid.add(button6, 15, 5);
-        grid.add(button7, 16, 5);
-        grid.add(button8, 17, 5);
+
+        //Game Board buttons
+        boardButtons = new Button[3][3];
+
+        for (int column = 0; column < 3; column++) {
+            for (int row = 0; row < 3 ; row++) {
+                boardButtons[column][row] = new Button ("");
+                boardButtons[column][row].setOpacity(0.5);
+                boardButtons[column][row].setPrefSize(150 , 150);
+                boardButtons[column][row].setFont(new Font(60));
+                boardButtons[column][row].setOnAction(this::placeXor0);
+                grid.add(boardButtons[column][row], column + 15, row + 3);
+            }
+        }
 
         //GridPane sizing
         grid.setVgap(25);
@@ -171,21 +119,46 @@ public class TicTacToe extends Application {
 
     private void clearBoard(ActionEvent actionEvent) {
 
-        // TODO - next round button works partially, clears board but prevents from taking another move
-        roundCounter++;
-        button0.setText(null);
-        button1.setText(null);
-        button2.setText(null);
-        button3.setText(null);
-        button4.setText(null);
-        button5.setText(null);
-        button6.setText(null);
-        button7.setText(null);
-        button8.setText(null);
+        boardButtons[0][0].setText("");
+        boardButtons[0][1].setText("");
+        boardButtons[0][2].setText("");
+        boardButtons[1][0].setText("");
+        boardButtons[1][1].setText("");
+        boardButtons[1][2].setText("");
+        boardButtons[2][0].setText("");
+        boardButtons[2][1].setText("");
+        boardButtons[2][2].setText("");
 
-        status.setText("Round: " + roundCounter + " - X turn!");
+        roundCounter++;
+        turn = 0;
+        status.setText("Round " + roundCounter + " X turn!");
         round.setText("Round: " + roundCounter);
-        return;
+        roundOver = false;
+    }
+
+    private void clearAll(ActionEvent actionEvent) {
+
+        boardButtons[0][0].setText("");
+        boardButtons[0][1].setText("");
+        boardButtons[0][2].setText("");
+        boardButtons[1][0].setText("");
+        boardButtons[1][1].setText("");
+        boardButtons[1][2].setText("");
+        boardButtons[2][0].setText("");
+        boardButtons[2][1].setText("");
+        boardButtons[2][2].setText("");
+
+        roundCounter = 1;
+        won = 0;
+        lost = 0;
+        tied =0;
+        turn = 0;
+        status.setText("New Game " + "\nRound " + roundCounter + " X turn!");
+        round.setText("Round: " + roundCounter);
+        wins.setText("Wins: " + won);
+        loss.setText("Loss: " + lost);
+        tie.setText("Ties: " + tied);
+        roundOver = false;
     }
 
 
@@ -194,12 +167,10 @@ public class TicTacToe extends Application {
             Button click = (Button) actionEvent.getSource();
 
             if (click.getText().length() > 0) {
-
-                // TODO - implement random button line 251
-                // AI Move - not working because of random button problems
-//                if(turn %2 !=0) {
-//                    computerTurn();
-//                }
+                // VS AI
+                if(turn %2 !=0) {           // Comment out if you want to play vs another human
+                    computerTurn();         // Comment out if you want to play vs another human
+                }                           // Comment out if you want to play vs another human
                 return;
             }
 
@@ -219,15 +190,14 @@ public class TicTacToe extends Application {
                 if (checkWinner(value)) {
                     status.setText(String.format("%S has won!", value));
 
-                    //TODO - win / loss counter to be implemented
-/*                    if (value = "X") {
+                    if (value.equals("X")) {
                         won++;
                         wins.setText("Wins: " + won);
                     }
                     else {
                         lost++;
                         loss.setText("Loss: " + lost);
-                    }*/
+                    }
                     roundOver = true;
                     return;
                 }
@@ -243,62 +213,64 @@ public class TicTacToe extends Application {
 
             status.setText(String.format("%S's turn.", turn % 2 == 0 ? "X" : "0"));
 
-            // TODO - sort random button (line 251)
-            // VS AI - not working because of random button problems
-//            if (turn %2 != 0) {
-//                computerTurn();
-//            }
+            // VS AI
+            if (turn %2 != 0) {     //Comment out if you want to play vs another human
+                computerTurn();     //Comment out if you want to play vs another human
+            }                       //Comment out if you want to play vs another human
         }
 
     }
 
-//    private void computerTurn() {
-//        //TODO - Random AI
-//        button[(int)(Math.random()*9)].fire();
-//    }
+    private void computerTurn() {
+        // AI logic, comment out the entire method if you want to play vs another human
+        boardButtons[(int)(Math.random()*3)][(int)(Math.random()*3)].fire();
+    }
 
     private boolean checkWinner(String player) {
-        //Horizontal
-        if(player.equals(button0.getText()) &&
-                player.equals(button1.getText()) &&
-                player.equals(button2.getText())) {
-            return true;
-        }
-        if(player.equals(button3.getText()) &&
-                player.equals(button4.getText()) &&
-                player.equals(button5.getText())) {
-            return true;
-        }
-        if(player.equals(button6.getText()) &&
-                player.equals(button7.getText()) &&
-                player.equals(button8.getText())) {
-            return true;
-        }
+
         //Vertical
-        if(player.equals(button0.getText()) &&
-                player.equals(button3.getText()) &&
-                player.equals(button6.getText())) {
+        if(player.equals(boardButtons[0][0].getText())
+                && player.equals(boardButtons[0][1].getText())
+                && player.equals(boardButtons[0][2].getText())) {
             return true;
         }
-        if(player.equals(button1.getText()) &&
-                player.equals(button4.getText()) &&
-                player.equals(button7.getText())) {
+        if(player.equals(boardButtons[1][0].getText())
+                && player.equals(boardButtons[1][1].getText())
+                && player.equals(boardButtons[1][2].getText())) {
             return true;
         }
-        if(player.equals(button2.getText()) &&
-                player.equals(button5.getText()) &&
-                player.equals(button8.getText())) {
+        if(player.equals(boardButtons[2][0].getText())
+                && player.equals(boardButtons[2][1].getText())
+                && player.equals(boardButtons[2][2].getText())) {
             return true;
         }
+
+        //Horizontal
+        if(player.equals(boardButtons[0][0].getText())
+                && player.equals(boardButtons[1][0].getText())
+                && player.equals(boardButtons[2][0].getText())) {
+            return true;
+        }
+        if(player.equals(boardButtons[0][1].getText())
+                && player.equals(boardButtons[1][1].getText())
+                && player.equals(boardButtons[2][1].getText())) {
+            return true;
+        }
+        if(player.equals(boardButtons[0][2].getText())
+                && player.equals(boardButtons[1][2].getText())
+                && player.equals(boardButtons[2][2].getText())) {
+            return true;
+        }
+
         //Diagonal
-        if(player.equals(button0.getText()) &&
-                player.equals(button4.getText()) &&
-                player.equals(button8.getText())) {
+        if(player.equals(boardButtons[0][0].getText())
+                && player.equals(boardButtons[1][1].getText())
+                && player.equals(boardButtons[2][2].getText())) {
             return true;
         }
-        if(player.equals(button2.getText()) &&
-                player.equals(button4.getText()) &&
-                player.equals(button6.getText())) {
+        if(player.equals(boardButtons[2][0].getText())
+                && player.equals(boardButtons[1][1].getText())
+                && player.equals(boardButtons[0][2].getText())) {
             return true;
         }
 
