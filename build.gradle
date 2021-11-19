@@ -24,7 +24,7 @@ tasks.withType(JavaCompile) {
 
 application {
     mainModule = 'com.example.tictactoe'
-    mainClass = 'com.example.tictactoe.HelloApplication'
+    mainClass = 'com.example.tictactoe.TicTacToe'
 }
 
 javafx {
@@ -36,7 +36,6 @@ dependencies {
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
-    implementation group: 'org.openjfx', name: 'javafx-media', version: '18-ea+7'
 }
 
 test {

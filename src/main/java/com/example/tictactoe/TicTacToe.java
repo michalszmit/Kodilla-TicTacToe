@@ -19,7 +19,6 @@ public class TicTacToe extends Application {
     ClassLoader classLoader = getClass().getClassLoader();
     Image imageback = new Image(Objects.requireNonNull(classLoader.getResourceAsStream("tavern.jpg")));
 
-
     private int won, lost, tied, roundCounter, turn;
     private boolean roundOver = false;
 
@@ -119,15 +118,11 @@ public class TicTacToe extends Application {
 
     private void clearBoard(ActionEvent actionEvent) {
 
-        boardButtons[0][0].setText("");
-        boardButtons[0][1].setText("");
-        boardButtons[0][2].setText("");
-        boardButtons[1][0].setText("");
-        boardButtons[1][1].setText("");
-        boardButtons[1][2].setText("");
-        boardButtons[2][0].setText("");
-        boardButtons[2][1].setText("");
-        boardButtons[2][2].setText("");
+        for (int column = 0; column < 3; column++) {
+            for (int row = 0; row < 3; row++) {
+                boardButtons[column][row].setText("");
+            }
+        }
 
         roundCounter++;
         turn = 0;
@@ -138,15 +133,11 @@ public class TicTacToe extends Application {
 
     private void clearAll(ActionEvent actionEvent) {
 
-        boardButtons[0][0].setText("");
-        boardButtons[0][1].setText("");
-        boardButtons[0][2].setText("");
-        boardButtons[1][0].setText("");
-        boardButtons[1][1].setText("");
-        boardButtons[1][2].setText("");
-        boardButtons[2][0].setText("");
-        boardButtons[2][1].setText("");
-        boardButtons[2][2].setText("");
+        for (int column = 0; column < 3; column++) {
+            for (int row = 0; row < 3; row++) {
+                boardButtons[column][row].setText("");
+            }
+        }
 
         roundCounter = 1;
         won = 0;
@@ -160,7 +151,6 @@ public class TicTacToe extends Application {
         tie.setText("Ties: " + tied);
         roundOver = false;
     }
-
 
     private void placeXor0(ActionEvent actionEvent) {
         if(!roundOver) {
